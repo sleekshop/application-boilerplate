@@ -46,6 +46,15 @@ private static $installed = array (
       ),
       'reference' => NULL,
     ),
+    'sleekcommerce/sleekshop-phpsdk-json' => 
+    array (
+      'pretty_version' => '1.5.0',
+      'version' => '1.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '02429c49a1735a8eddb73a08984af8b4b3e433ef',
+    ),
     'symfony/polyfill-ctype' => 
     array (
       'pretty_version' => 'v1.25.0',

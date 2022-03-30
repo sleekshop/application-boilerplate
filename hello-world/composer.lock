@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5750d0f032c27581a2f94d07e072487",
+    "content-hash": "d7a6c037b4f3c3bde85bbd691c7ade74",
     "packages": [
+        {
+            "name": "sleekcommerce/sleekshop-phpsdk-json",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sleekshop/phpsdk-json.git",
+                "reference": "02429c49a1735a8eddb73a08984af8b4b3e433ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sleekshop/phpsdk-json/zipball/02429c49a1735a8eddb73a08984af8b4b3e433ef",
+                "reference": "02429c49a1735a8eddb73a08984af8b4b3e433ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kaveh Raji",
+                    "email": "info@sleekshop.io",
+                    "homepage": "https://www.sleekshop.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Controllers for connecting to sleekshop",
+            "homepage": "https://www.sleekshop.io",
+            "keywords": [
+                "sdk",
+                "sleekshop"
+            ],
+            "support": {
+                "issues": "https://github.com/sleekshop/phpsdk-json/issues",
+                "source": "https://github.com/sleekshop/phpsdk-json/tree/1.5.0"
+            },
+            "time": "2020-11-14T21:29:10+00:00"
+        },
         {
             "name": "symfony/polyfill-ctype",
             "version": "v1.25.0",

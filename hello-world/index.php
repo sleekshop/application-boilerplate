@@ -7,29 +7,6 @@
 */
 
 require __DIR__ . '/vendor/config/bootstrap.php';
-/*$post = [
-    'licence_username' => LICENCE_USERNAME,
-    'licence_password' => LICENCE_PASSWORD,
-    'request'   => "instant_login",
-    'token'   => TOKEN,
-    'application_token'   => APPLICATION_TOKEN,
-];
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://boilerplate.sleekshop.net/srv/service/');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
-$response = curl_exec($ch);
-$jsondecoded = json_decode($response,true);
-if($jsondecoded['status'] == "SUCCESS"){
-    //var_dump($jsondecoded);
-    $data = $jsondecoded;
-    echo $twig->render('index.html', ['data' => $data] );
-}else{
-   $data = "PERMISSION_DENIED";
-   echo $twig->render('error.html', ['data' => $data] );
-}
-*/
 $request = strtok($_SERVER["REQUEST_URI"], '?');
 $request=explode("/",$request);
 $request=array_pop($request);
@@ -44,6 +21,9 @@ switch ($request) {
         break;
     case '/settings' :
         echo $twig->render('settings.html', ['data' =>  'Settings Screen!!!'] );
+        break;
+    case '/about' :
+        echo $twig->render('settings.html', ['data' =>  'About Screen!!!'] );
         break;
     default:
         $post = [
