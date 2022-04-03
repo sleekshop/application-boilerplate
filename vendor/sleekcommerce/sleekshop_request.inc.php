@@ -23,7 +23,17 @@ private $post_data=array();
   $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password);
  }
 
-
+ /*
+   * This function is for instant_login
+   */
+  public function instant_login($token="")
+  {
+   $post_data=$this->post_data;
+   $post_data["request"]="instant_login";
+   $post_data["token"]=TOKEN;
+   $post_data["application_token"]=APPLICATION_TOKEN;
+   return $this->snd_request($this->server,$post_data);
+  }
 
   /*
    * This function is for requesting the category names and labels with the parent determined by id_parent
