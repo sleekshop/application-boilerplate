@@ -7,6 +7,10 @@
 */
 
 require __DIR__ . '/vendor/bootstrap.php';
+/*
+* include all custom application files
+* Example:- require __DIR__ . '/ctl/yourfilename.php';
+*/
 
 $request = strtok($_SERVER["REQUEST_URI"], '?');
 $request=explode("/",$request);
@@ -41,21 +45,4 @@ switch ($request) {
         }
         break;
 }
-
-//Getuserdata demo
-/*
-$instant_login_res = json_decode($response,true);
-
-$post1 = [
-    'licence_username' => 'boilerplate_3UkUY6IidJnjHvCQYAka',
-    'licence_password' => 'TZ3zEWRs3Xt0new3bVTV',
-    'request'   => "get_user_data",
-    'session'   => $instant_login_res['remote_session'],
-];
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://boilerplate.sleekshop.net/srv/service/');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post1));
-$response = curl_exec($ch);
-var_export(json_decode($response,true));*/
 ?>
