@@ -13,14 +13,16 @@ class SleekShopRequest
 private $server="";
 private $licence_username="";
 private $licence_password="";
+private $application_token="";
+private $token="";
 private $post_data=array();
-
- public function __construct()
+public function __construct($myarray)
  {
-  $this->server=SERVER;
-  $this->licence_username=LICENCE_USERNAME;
-  $this->licence_password=LICENCE_PASSWORD;
-  $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password);
+   $this->server            = $myarray['SERVER'];
+   $this->licence_username  = $myarray['LICENCE_USERNAME'];
+   $this->application_token = $myarray['APPLICATION_TOKEN'];
+   $this->licence_password  = $myarray['LICENCE_PASSWORD'];
+   $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password,"application_token"=>$this->application_token);
  }
 
  /*
@@ -30,8 +32,9 @@ private $post_data=array();
   {
    $post_data=$this->post_data;
    $post_data["request"]="instant_login";
-   $post_data["token"]=TOKEN;
-   $post_data["application_token"]=APPLICATION_TOKEN;
+   $post_data["token"]=$token;
+  // echo $this->server."<br>";
+   print_r($post_data);
    return $this->snd_request($this->server,$post_data);
   }
 
