@@ -32,7 +32,7 @@ public function __construct($myarray)
   {
    $post_data=$this->post_data;
    $post_data["request"]="instant_login";
-   $post_data["token"]=$token;  
+   $post_data["token"]=$token;
    return $this->snd_request($this->server,$post_data);
   }
 
