@@ -9,7 +9,7 @@
 require __DIR__ . '/vendor/bootstrap.php';
 
 //define application folder name
-define("APP_PATH","hello-world");
+define("APP_PATH","application-boilerplate");
 
 $request = strtok($_SERVER["REQUEST_URI"], '?');
 $request=explode("/",$request);
@@ -19,7 +19,7 @@ $app_path = APP_PATH;
 $remote_session = $_GET["ses"];
 switch ($request) {
     case '/' :
-            echo $twig->render('error.html', ['data' =>  '404 Not Found!!!'] );
+            echo $twig->render('error.html', ['data' =>  '404 Not Found!!!','path' => $app_path]);
             break;
     case '/home' :
             echo $twig->render('index.html', ['data' =>  'Welcome Sendinblue','path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$remote_session] );
