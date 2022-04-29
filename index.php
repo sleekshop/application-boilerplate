@@ -3,13 +3,13 @@
 * index file
 * version: 1.0.0
 * (c) Boilerplate for sleekshop applications
-* (c) Demo app - Manisha Sharma
+* (c) Demo app - Manisha Sharma(ms@sleekshop.io)
 */
 
 require __DIR__ . '/vendor/bootstrap.php';
 
 //define application folder name
-define("APP_PATH","application-boilerplate");
+define("APP_PATH",basename(__DIR__));
 
 $request = strtok($_SERVER["REQUEST_URI"], '?');
 $request=explode("/",$request);
@@ -78,43 +78,4 @@ switch ($request) {
                 }
                 break;
 }
-
-  /*$data_array = $myarray;
-  $success = 0;
-  $server            = $data_array['SERVER'];
-  $licence_username  = $data_array['LICENCE_USERNAME'];
-  $application_token = $data_array['APPLICATION_TOKEN'];
-  $licence_password  = $data_array['LICENCE_PASSWORD'];
-  //data in our POST
-  if(isset($_POST['add'])){
-    echo "post action";
-     $data_array['SERVER']             = $_POST['SERVER'];
-     $data_array['LICENCE_USERNAME']   = $_POST['LICENCE_USERNAME'];
-     $data_array['LICENCE_PASSWORD']   = $_POST['LICENCE_PASSWORD'];
-     $data_array['APPLICATION_TOKEN']  = $_POST['APPLICATION_TOKEN'];
-
-     //$data_array = json_encode($data_array, JSON_PRETTY_PRINT);
-     file_put_contents(__DIR__.'/vendor/config.php',
-         "<?php\n\$myarray = "
-           .var_export($data_array, true)
-         .";\n?>"
-       );
-     $data_message = "Configuration Updated!!";
-     $sr=new SleekshopRequest($data_array);
-     $res=$sr->instant_login($_GET["token"]);
-     $jsondecoded = json_decode($res,true);
-     echo $_GET["token"];
-     print_r($data_array);
-     print_r($jsondecoded);
-     if($jsondecoded['status'] == "SUCCESS"){
-       $remote_session = $jsondecoded['remote_session'];
-       echo "success and set session";
-       $_SESSION['last_action'] = time();
-       echo $twig->render('index.html', ['data' => $data_message,'path' => $app_path] );
-     }
-  }
-  else{
-     $data_message = "Configuration Settings!!";
-     echo $twig->render('settings_default.html', ['data' => $data_message,'config_data'=>$data_array,'path' => $app_path] );
-   }*/
 ?>
