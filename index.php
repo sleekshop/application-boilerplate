@@ -22,7 +22,7 @@ switch ($request) {
             echo $twig->render('error.html', ['data' =>  '404 Not Found!!!','path' => $app_path]);
             break;
     case '/home' :
-            echo $twig->render('index.html', ['data' =>  'Welcome Sendinblue','path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$remote_session] );
+            echo $twig->render('index.html', ['data' =>  'Welcome Application Boilerplate','path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$remote_session] );
             break;
     case '/settings' :
              $data_array = $myarray;
