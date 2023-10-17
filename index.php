@@ -5,19 +5,13 @@
 * (c) Boilerplate for sleekshop applications
 * (c) Demo app - Manisha Sharma(ms@sleekshop.io)
 */
-
-require __DIR__ . '/vendor/bootstrap.php';
-
+ini_set('display_errors', 0);
 //define application folder name
 define("APP_PATH",basename(__DIR__));
 
-$request = strtok($_SERVER["REQUEST_URI"], '?');
-$request=explode("/",$request);
-$request=array_pop($request);
-$request="/".$request;
-$app_path = APP_PATH;
-$remote_session = $_GET["ses"];
-if(!empty($remote_session) && !empty($_GET["token"])){
+require __DIR__ . '/vendor/bootstrap.php';
+
+
   switch ($request) {
       case '/' :
               echo $twig->render('error.html', ['data' =>  '404 Not Found!!!','path' => $app_path]);
@@ -79,7 +73,4 @@ if(!empty($remote_session) && !empty($_GET["token"])){
                   }
                   break;
   }
-}else{
-  echo $twig->render('error.html', ['data' =>  'PERMISSION_DENIED','path' => $app_path] );
-}
 ?>
