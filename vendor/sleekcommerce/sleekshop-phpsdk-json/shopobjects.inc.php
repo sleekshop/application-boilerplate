@@ -30,15 +30,15 @@ private static function get_shopobject_from_json($so="")
 	$piecearray["title"]=(string)$so->seo->title;
 	$piecearray["description"]=(string)$so->seo->description;
 	$piecearray["keywords"]=(string)$so->seo->keywords;
-  try {
-    $piecearray["availability_quantity"]=(string)$so->availability->quantity;
-  	$piecearray["availability_quantity_warning"]=(string)$so->availability->quantity_warning;
-  	$piecearray["availability_allow_override"]=(string)$so->availability->allow_override;
-  	$piecearray["availability_active"]=(string)$so->availability->active;
-  	$piecearray["availability_label"]=self::get_availability_label($piecearray["availability_quantity"],$piecearray["availability_quantity_warning"],$piecearray["availability_allow_override"],$piecearray["availability_active"]);
-  } catch (Exception $e) {
-     //Nothing happens because it seems to be a content object without availability
-  }
+
+    if (isset($so->availability->quantity))
+	{
+		$piecearray["availability_quantity"]=(string)$so->availability->quantity;
+  		$piecearray["availability_quantity_warning"]=(string)$so->availability->quantity_warning;
+  		$piecearray["availability_allow_override"]=(string)$so->availability->allow_override;
+  		$piecearray["availability_active"]=(string)$so->availability->active;
+		$piecearray["availability_label"]=self::get_availability_label($piecearray["availability_quantity"],$piecearray["availability_quantity_warning"],$piecearray["availability_allow_override"],$piecearray["availability_active"]);
+	}
 	$piecearray["creation_date"]=(string)$so->creation_date;
 	$attributes=array();
 	foreach((array)$so->attributes as $attribute)
@@ -106,10 +106,32 @@ private static function get_products_from_json($json="")
 private static function get_contents_from_json($json="")
 {
 	$result=array();
+  $prev="not_set";
+  $current="not_set";
+  $prevkey=0;
+  $layoutindex=0;
+  $layoutmax=1;
+  $index=0;
+  $result["chain"]=array();
 	foreach((array)$json as $so)
 	{
 		$result[(string)$so->name]=self::get_shopobject_from_json($so);
 		$result["byclass"][(string)$so->class][]=$result[(string)$so->name];
+		if(isset($so->attributes->layout)){
+    $current=(string)$so->attributes->layout->value;
+    $result["layouts"][(string)$so->attributes->layout->value]=1;
+    $current!=$prev ? $layoutindex=0 : $layoutindex++;
+    $layoutmax=$layoutindex+1;
+    foreach($result["chain"] as $k=>$v)
+    {
+      if($result["chain"][$k]["index"]>$index-$layoutmax) $result["chain"][$k]["layoutmax"]=$layoutmax;
+    }
+    $result["chain"][$result[$so->name]["id"]]=array("prev"=>$prev,"current"=>$current,"next"=>"not_set","index"=>$index,"layoutindex"=>$layoutindex,"layoutmax"=>$layoutmax);
+    if($prevkey>0) $result["chain"][$prevkey]["next"]=$result[$so->name]["attributes"]["layout"]["value"];
+    $prevkey=$result[$so->name]["id"];
+    $prev=$result[$so->name]["attributes"]["layout"]["value"];
+    $index++;
+    }
 	}
 	return($result);
 }
@@ -119,10 +141,10 @@ private static function get_contents_from_json($json="")
 /*
  * Delivers an array containing all categories with the parent defined by $id_parent
  */
-public static function GetShopobjects($id_category=0,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+public static function GetShopobjects($id_category=0,$lang=DEFAULT_LANGUAGE,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
  {
   $sr=new SleekShopRequest();
-  $json=$sr->get_shopobjects_in_category($id_category,$lang,$order_column,$order,$left_limit,$right_limit,$needed_attributes);
+  $json=$sr->get_shopobjects_in_category($id_category,$lang,$order_columns,$order,$left_limit,$right_limit,$needed_attributes);
   $json=json_decode($json);
   $result=array();
   $result["id_category"]=(int)$json->category->id;
@@ -134,7 +156,7 @@ public static function GetShopobjects($id_category=0,$lang=DEFAULT_LANGUAGE,$ord
   $attributes=array();
   foreach((array)$json->category->attributes as $attr)
   {
-  	$attributes[(string)$attr->attributes()->name]=(string)$attr;
+	$attributes[$attr->name]=$attr->value;
   }
   $result["attributes"]=$attributes;
   $result["products"]=self::get_products_from_json($json->products);
@@ -148,10 +170,10 @@ public static function GetShopobjects($id_category=0,$lang=DEFAULT_LANGUAGE,$ord
 /*
  * Delivers an array containing all categories with the parent defined by $permalink
 */
-public static function SeoGetShopobjects($permalink,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+public static function SeoGetShopobjects($permalink,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
 {
 	$sr=new SleekShopRequest();
-	$json=$sr->seo_get_shopobjects_in_category($permalink,$lang,$order_column,$order,$left_limit,$right_limit,$needed_attributes);
+	$json=$sr->seo_get_shopobjects_in_category($permalink,$order_columns,$order,$left_limit,$right_limit,$needed_attributes);
 	$json=json_decode($json);
 	$result=array();
 	$result["id_category"]=(int)$json->category->id;
@@ -225,7 +247,11 @@ public static function SeoGetContentDetails($permalink="")
 	$sr=new SleekShopRequest();
 	$json=$sr->seo_get_content_details($permalink);
 	$json=json_decode($json);
-	$result=self::get_shopobject_from_json($json);
+	if (isset($json->object) && $json->object == 'error') {
+		$result = null;
+	} else {
+        $result=self::get_shopobject_from_json($json);
+    }
 	return($result);
 }
 
@@ -233,7 +259,7 @@ public static function SeoGetContentDetails($permalink="")
 /*
  * Search
 */
-public static function SearchProducts($constraint=array(),$left_limit,$right_limit,$order_columns=array(),$order_type="ASC",$lang=DEFAULT_LANGUAGE,$needed_attributes=array())
+public static function SearchProducts($constraint=array(),$left_limit=0,$right_limit=0,$order_columns=array(),$order_type="ASC",$lang=DEFAULT_LANGUAGE,$needed_attributes=array())
 {
 	$sr=new SleekShopRequest();
 	$json=$sr->search_products($constraint,$left_limit,$right_limit,$order_columns,$order_type,$lang,$needed_attributes);

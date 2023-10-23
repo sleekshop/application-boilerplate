@@ -20,11 +20,8 @@ require __DIR__ . '/vendor/bootstrap.php';
               echo $twig->render('index.html', ['data' =>  'Welcome Application Boilerplate','path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$remote_session] );
               break;
       case '/settings' :
-               $data_array = $myarray;
+               $data_array = array("SERVER"=>SERVER,"LICENCE_USERNAME"=>LICENCE_USERNAME,"LICENCE_PASSWORD"=>LICENCE_PASSWORD,"APPLICATION_TOKEN"=>TOKEN);
                $success = 0;
-               $server            = $data_array['SERVER'];
-               $licence_username  = $data_array['LICENCE_USERNAME'];
-               $application_token = $data_array['APPLICATION_TOKEN'];
                //data in our POST
                if(isset($_POST['add'])){
                   $data_array['SERVER']             = $_POST['SERVER'];
@@ -33,13 +30,23 @@ require __DIR__ . '/vendor/bootstrap.php';
                   $data_array['APPLICATION_TOKEN']  = $_POST['APPLICATION_TOKEN'];
 
                   //$data_array = json_encode($data_array, JSON_PRETTY_PRINT);
-                  file_put_contents(__DIR__.'/vendor/config.php',
-                      "<?php\n\$myarray = "
-                        .var_export($data_array, true)
-                      .";\n?>"
-                    );
+                  $c='
+                  <?php
+                  define("SERVER","'.$data_array['SERVER'].'");
+                  define("LICENCE_USERNAME","'.$data_array['LICENCE_USERNAME'].'");
+                  define("LICENCE_PASSWORD","'.$data_array['LICENCE_PASSWORD'].'");
+                  define("TOKEN","'.$data_array['APPLICATION_TOKEN'].'");
+                  ?>
+                  ';
+                  file_put_contents(__DIR__.'/vendor/config.php',$c);
+
+                  define("SERVER",$data_array['SERVER']);
+                  define("LICENCE_USERNAME",$data_array['LICENCE_USERNAME']);
+                  define("LICENCE_PASSWORD",$data_array['LICENCE_PASSWORD']);
+                  define("TOKEN",$data_array['APPLICATION_TOKEN']);
+
                     $data_message = "Configuration Updated!!";
-                    $sr=new SleekshopRequest($data_array);
+                    $sr=new SleekshopRequest();
                     $res=$sr->instant_login($_GET["token"]);
                     $jsondecoded = json_decode($res,true);
                     if($jsondecoded['status'] == "SUCCESS"){
@@ -58,17 +65,17 @@ require __DIR__ . '/vendor/bootstrap.php';
                     echo $twig->render('error.html', ['data' =>  'PERMISSION_DENIED','path' => $app_path] );
                 }else{
                     //checking for empty values and try instant login and if all good show settings form else permission denied
-                    if($myarray['SERVER'] != "" && $myarray['LICENCE_USERNAME'] != "" && $myarray['LICENCE_PASSWORD'] != "" && $myarray['APPLICATION_TOKEN'] != ""){
-                          $sr=new SleekshopRequest($myarray);
+                    if(SERVER != "" && LICENCE_USERNAME != "" && LICENCE_PASSWORD != "" && TOKEN != ""){
+                          $sr=new SleekshopRequest();
                           $res=$sr->instant_login($_GET["token"]);
                           $jsondecoded = json_decode($res,true);
                           if($jsondecoded['status'] == "SUCCESS"){
-                            echo $twig->render('index.html', ['path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$jsondecoded['remote_session']]);
+                            echo $twig->render('index.html', ['data' =>  'Welcome Application Boilerplate','path' => $app_path,'token'=>$_GET["token"],'remote_session'=>$jsondecoded['remote_session']]);
                           }else{
                             echo $twig->render('error.html', ['data' =>  'PERMISSION_DENIED','path' => $app_path] );
                           }
                     }else{
-                      echo $twig->render('index.html', ['token'=>$_GET["token"],'path' => $app_path]);
+                      echo $twig->render('index.html', ['data' =>  'Welcome Application Boilerplate','token'=>$_GET["token"],'path' => $app_path]);
                     }
                   }
                   break;

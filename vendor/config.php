@@ -1,8 +1,6 @@
 <?php
-$myarray = array (
-  'LICENCE_USERNAME' => '',
-  'LICENCE_PASSWORD' => '',
-  'SERVER' => '',
-  'APPLICATION_TOKEN' => '',
-);
+ define("SERVER","");
+ define("LICENCE_USERNAME","");
+ define("LICENCE_PASSWORD","");
+ define("TOKEN","");       
 ?>

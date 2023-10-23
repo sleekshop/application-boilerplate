@@ -4,6 +4,4 @@
 
 require_once __DIR__ . '/composer/autoload_real.php';
 
-$autoload['helper'] = array('url', 'form');
-
 return ComposerAutoloaderInit2e846f97de7c008b2602509480e76842::getLoader();

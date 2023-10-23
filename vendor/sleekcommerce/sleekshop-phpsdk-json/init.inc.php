@@ -5,13 +5,11 @@
  * @ Kaveh Raji <kr@sleekcommerce.com>
  */
  define("ROOTPATH", "");
- define("PROJECTPATH", ROOTPATH . "./");
-
- 
+ define("PROJECTPATH", ROOTPATH . "../");
  /*
   * Now including some libaries needed
   */
-  //include(PROJECTPATH . "vendor/sleekcommerce/sleekshop-phpsdk-json/conf.inc.php");
+  include(PROJECTPATH . "vendor/sleekcommerce/sleekshop-phpsdk-json/conf.inc.php");
   include(PROJECTPATH . "vendor/sleekcommerce/sleekshop-phpsdk-json/sleekshop_request.inc.php");
   include(PROJECTPATH . "vendor/sleekcommerce/sleekshop-phpsdk-json/cart.inc.php");
   include(PROJECTPATH . "vendor/sleekcommerce/sleekshop-phpsdk-json/shopobjects.inc.php");

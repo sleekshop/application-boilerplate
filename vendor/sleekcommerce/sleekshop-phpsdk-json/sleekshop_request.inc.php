@@ -4,28 +4,24 @@
 * version: 1.3.0.0
 * (c) sleekcommerce - Kaveh Raji
 */
-define("LICENCE_USERNAME","");
-define("SERVER","");
-define("LICENCE_PASSWORD","");
 
 class SleekShopRequest
 {
 private $server="";
 private $licence_username="";
 private $licence_password="";
-private $application_token="";
-private $token="";
 private $post_data=array();
-public function __construct($myarray)
+
+ public function __construct()
  {
-   $this->server            = $myarray['SERVER'];
-   $this->licence_username  = $myarray['LICENCE_USERNAME'];
-   $this->application_token = $myarray['APPLICATION_TOKEN'];
-   $this->licence_password  = $myarray['LICENCE_PASSWORD'];
-   $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password,"application_token"=>$this->application_token);
+  $this->server=SERVER;
+  $this->licence_username=LICENCE_USERNAME;
+  $this->licence_password=LICENCE_PASSWORD;
+  $this->post_data=array("licence_username"=>$this->licence_username,"licence_password"=>$this->licence_password);
  }
 
- /*
+
+/*
    * This function is for instant_login
    */
   public function instant_login($token="")
@@ -33,8 +29,10 @@ public function __construct($myarray)
    $post_data=$this->post_data;
    $post_data["request"]="instant_login";
    $post_data["token"]=$token;
+   $post_data["application_token"]=TOKEN;
    return $this->snd_request($this->server,$post_data);
   }
+
 
   /*
    * This function is for requesting the category names and labels with the parent determined by id_parent
@@ -58,13 +56,13 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function get_products_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function get_products_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="get_products_in_category";
    $post_data["id_category"]=$id_category;
    $post_data["language"]=$lang;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -81,13 +79,13 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function get_shopobjects_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function get_shopobjects_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="get_shopobjects_in_category";
    $post_data["id_category"]=$id_category;
    $post_data["language"]=$lang;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -104,13 +102,13 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function get_contents_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function get_contents_in_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="get_contents_in_category";
    $post_data["id_category"]=$id_category;
    $post_data["language"]=$lang;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -123,13 +121,13 @@ public function __construct($myarray)
    * This function dumps all products and child - categories inherited in an category determined by its id
    * Further it is possible to influence the product listing like order, leftlimit and so on
    */
-  public function dump_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function dump_category($id_category=0,$lang=DEFAULT_LANGUAGE,$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="dump_category";
    $post_data["id_category"]=$id_category;
    $post_data["language"]=$lang;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -249,6 +247,16 @@ public function __construct($myarray)
     if($key=="attributes") $value=json_encode($value);
     $post_data[$key]=$value;
    }
+   return $this->snd_request($this->server,$post_data);
+  }
+
+ /*
+  * This function gets all delivery countries activated in the backend
+  */
+  public function get_delivery_countries()
+  {
+   $post_data=$this->post_data;
+   $post_data["request"]="get_delivery_countries";
    return $this->snd_request($this->server,$post_data);
   }
 
@@ -411,7 +419,7 @@ public function __construct($myarray)
      /*
     * This function is for setting a new user - password
     */
-   public function set_user_password($session="",$old_password,$new_password1,$new_password2)
+   public function set_user_password($session,$old_password,$new_password1,$new_password2)
    {
     $post_data=$this->post_data;
     $post_data["request"]="set_user_password";
@@ -527,12 +535,12 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function seo_get_products_in_category($permalink="",$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function seo_get_products_in_category($permalink="",$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="seo_get_products_in_category";
    $post_data["permalink"]=$permalink;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -549,12 +557,12 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function seo_get_contents_in_category($permalink="",$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function seo_get_contents_in_category($permalink="",$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="seo_get_contents_in_category";
    $post_data["permalink"]=$permalink;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
@@ -572,12 +580,12 @@ public function __construct($myarray)
    * Order Column determines the order column
    * The Order determines the order
    */
-  public function seo_get_shopobjects_in_category($permalink="",$order_column="",$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
+  public function seo_get_shopobjects_in_category($permalink="",$order_columns=array(),$order="ASC",$left_limit=0,$right_limit=0,$needed_attributes=array())
   {
    $post_data=$this->post_data;
    $post_data["request"]="seo_get_shopobjects_in_category";
    $post_data["permalink"]=$permalink;
-   $post_data["order_column"]=$order_column;
+   $post_data["order_columns"]=json_encode($order_columns);
    $post_data["order"]=$order;
    $post_data["left_limit"]=$left_limit;
    $post_data["right_limit"]=$right_limit;
