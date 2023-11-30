@@ -8,6 +8,8 @@
 ini_set('display_errors', 0);
 //define application folder name
 $arr=dirname($_SERVER["PHP_SELF"]);
+if($arr!="/")
+{
 $arr=explode("/",$arr);
 $newarr=array();
 foreach($arr as $k=>$v)
@@ -16,6 +18,11 @@ foreach($arr as $k=>$v)
  }
  $newarr=implode("/",$newarr);
  define("APP_PATH",$newarr);
+}
+else
+{
+  define("APP_PATH","");
+}
 
 require __DIR__ . '/vendor/bootstrap.php';
 
