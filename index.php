@@ -7,7 +7,15 @@
 */
 ini_set('display_errors', 0);
 //define application folder name
-define("APP_PATH",basename(__DIR__));
+$arr=dirname($_SERVER["PHP_SELF"]);
+$arr=explode("/",$arr);
+$newarr=array();
+foreach($arr as $k=>$v)
+ {
+  if($v!="index.php") $newarr[]=$v;
+ }
+ $newarr=implode("/",$newarr);
+ define("APP_PATH",$newarr);
 
 require __DIR__ . '/vendor/bootstrap.php';
 
