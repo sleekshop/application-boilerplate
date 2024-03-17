@@ -4,9 +4,9 @@
  *
  * @ Kaveh Raji <kr@sleekcommerce.com>
  */
- define("ROOTPATH", "");
- define("PROJECTPATH", ROOTPATH . "./");
-
+define("DEFAULT_LANGUAGE","de_DE");
+define("ROOTPATH", __DIR__ . "/../../");
+define("PROJECTPATH", ROOTPATH . "./");
  
  /*
   * Now including some libaries needed
